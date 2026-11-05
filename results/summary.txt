@@ -1,0 +1,34 @@
+total_subjects=14000
+coded_initial_verbs=8291
+overall=BASE:7484,PAST:752,3SG:23,PROG:32
+base_past_mutual_information_bits=0.3798
+base_past_entropy_bits=0.4408
+repo=cpython	total=1000	coded=568	base=564	past=1	3sg=3	prog=0	base_share=0.998
+repo=react	total=1000	coded=501	base=496	past=3	3sg=2	prog=0	base_share=0.994
+repo=django	total=1000	coded=685	base=0	past=685	3sg=0	prog=0	base_share=0.000
+repo=go	total=1000	coded=470	base=467	past=2	3sg=1	prog=0	base_share=0.996
+repo=node	total=1000	coded=455	base=455	past=0	3sg=0	prog=0	base_share=1.000
+repo=pytorch	total=1000	coded=440	base=433	past=3	3sg=2	prog=2	base_share=0.993
+repo=flask	total=1000	coded=658	base=639	past=12	3sg=3	prog=4	base_share=0.982
+repo=requests	total=1000	coded=680	base=643	past=16	3sg=5	prog=16	base_share=0.976
+repo=numpy	total=1000	coded=469	base=460	past=6	3sg=1	prog=2	base_share=0.987
+repo=pandas	total=1000	coded=283	base=281	past=2	3sg=0	prog=0	base_share=0.993
+repo=fastapi	total=1000	coded=879	base=879	past=0	3sg=0	prog=0	base_share=1.000
+repo=vue	total=1000	coded=889	base=887	past=2	3sg=0	prog=0	base_share=0.998
+repo=svelte	total=1000	coded=687	base=683	past=4	3sg=0	prog=0	base_share=0.994
+repo=httpx	total=1000	coded=627	base=597	past=16	3sg=6	prog=8	base_share=0.974
+lemma=fix	base=2213	past=537	3sg=11	prog=4
+lemma=update	base=1732	past=24	3sg=7	prog=10
+lemma=add	base=890	past=91	3sg=2	prog=7
+lemma=bump	base=648	past=9	3sg=0	prog=0
+lemma=remove	base=404	past=34	3sg=0	prog=3
+lemma=avoid	base=144	past=1	3sg=0	prog=0
+lemma=document	base=120	past=2	3sg=0	prog=0
+lemma=allow	base=94	past=2	3sg=0	prog=0
+lemma=move	base=92	past=3	3sg=0	prog=1
+lemma=drop	base=95	past=1	3sg=0	prog=0
+lemma=improve	base=81	past=5	3sg=1	prog=2
+lemma=support	base=86	past=0	3sg=0	prog=0
+lemma=enable	base=81	past=1	3sg=1	prog=1
+lemma=clarify	base=64	past=10	3sg=0	prog=0
+lemma=revert	base=71	past=1	3sg=1	prog=1

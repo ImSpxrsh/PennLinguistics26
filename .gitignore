@@ -1,0 +1,6 @@
+data/repos/
+abstract/*.aux
+abstract/*.log
+abstract/*.out
+tmp/
+.DS_Store
