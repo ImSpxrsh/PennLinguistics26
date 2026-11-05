@@ -1,0 +1,158 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper,margin=0.75in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{setspace}
+\setstretch{1.0}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\setlength{\tabcolsep}{5pt}
+\hypersetup{hidelinks,pdftitle={Romanization or resolution? A shuffled-label control for Cherokee-English translation memory},pdfauthor={},pdfsubject={Anonymous PLC 51 abstract},pdfkeywords={}}
+\pagestyle{plain}
+\renewcommand{\refname}{References}
+
+\begin{document}
+
+\begin{center}
+{\bfseries Romanization or resolution? A shuffled-label control for\\
+Cherokee--English translation memory}
+\end{center}
+\vspace{-0.65em}
+
+Transliteration can improve low-resource language technology by exposing
+cross-script or phonological overlap (Goyal et al. 2020; Moosa et al. 2023).
+But a raw-script--romanized comparison changes two things at once. It changes
+the linguistic labels, and it expands one source symbol into several Latin
+characters. The latter alone alters the geometry of character n-gram models.
+We isolate these factors in Cherokee--English translation, where the Cherokee
+syllabary provides an unusually clean test: a source symbol has a conventional
+Latin syllable label, but it can also be assigned an arbitrary label of the
+same length. A public corpus experiment finds a significant $+1.02$ chrF2
+gain from romanization over raw syllabary. Crucially, length-matched shuffled
+labels reproduce about 80\% of that gain. Thus the usual two-condition
+comparison overstates the evidence that transliteration helps because it
+encodes linguistically appropriate sub-symbol structure.
+
+\textbf{Background.}
+Cherokee is polysynthetic and severely endangered. ChrEn provides 14K
+Cherokee--English pairs and separate in- and out-of-domain evaluations
+(Zhang et al. 2020). Work with Cherokee speakers also emphasizes that language
+technology must be developed through community partnership rather than treating
+an endangered language as a benchmark alone (Zhang et al. 2022). Our target is
+therefore methodological: we audit a common modeling inference, not propose a
+new community orthography. The romanization below is an automatically
+reproducible diagnostic based on Unicode character labels.
+
+\textbf{Method.}
+We use the published ChrEn splits: 11,639 training, 1,000 development, 1,000
+in-domain test, and 256 out-of-domain test pairs. To make the representational
+effect transparent, the translation system is one-nearest-neighbor translation
+memory. A TF--IDF vector represents each Cherokee sentence with character
+$n$-grams; the English side of its nearest training neighbor is returned as the
+translation. Native-script and romanized $n$-gram ranges are independently
+selected on development data from 1--4, 1--6, 2--5, 2--6, and 2--8. Both select
+1--4. Output is scored with corpus chrF2 over character 1--6-grams
+(Popovic 2015).
+
+The \textsc{raw} condition uses Cherokee syllabary characters. The
+\textsc{romanized} condition maps each of 85 Cherokee symbols losslessly to the
+lowercase label in its Unicode character name (for example, a syllabary symbol
+labeled \emph{NA} becomes \texttt{na}). This exposes within-syllable Latin
+substrings to the retriever. The key control randomly permutes these 85 labels
+among symbols \emph{within label-length groups}. Each control therefore
+preserves the romanized alphabet, label frequencies, and every symbol's
+expansion length, while destroying the association between a symbol and its
+intended syllable label. We run 20 permutations. Uncertainty for the raw versus
+romanized difference comes from 2,000 paired bootstrap samples of test items.
+
+\textbf{Results.}
+Table~\ref{tab:results} shows that romanization raises in-domain chrF2 from
+34.74 to 35.76, a $+1.02$ gain whose bootstrap 95\% interval is
+$[0.49,1.51]$; none of 2,000 resamples is non-positive. Source-side nearest-
+neighbor cosine similarity also rises from .344 to .443. The apparent benefit
+therefore replicates what an ordinary raw--romanized comparison would call a
+successful transliteration intervention.
+
+\begin{table}[h]
+\centering
+\caption{Cherokee-to-English translation-memory retrieval.}
+\label{tab:results}
+\vspace{-0.1em}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Representation & In-domain chrF2 & Out-domain chrF2 & Source cosine\\
+\midrule
+Raw syllabary & 34.74 & 18.54 & .344\\
+Unicode-label romanization & 35.76 & 19.21 & .443\\
+Shuffled labels (20; mean $\pm$ SD) & $35.55\pm.15$ & -- & --\\
+\bottomrule
+\end{tabular}
+\end{table}
+\vspace{-0.6em}
+
+The shuffled-label result changes the interpretation. Its scores range from
+35.39 to 35.92; two of 20 arbitrary mappings outperform the linguistically
+labeled mapping. The romanized condition is only 0.21 above the shuffle mean,
+while the shuffle mean is 0.81 above raw. On this operationalization, roughly
+80\% of the headline gain is recoverable without correct syllable labels.
+
+\textbf{Analysis.}
+A Cherokee syllabary character is atomic to the raw character model. Expanding
+it into multiple Latin characters creates additional partial matches, longer
+contexts, and more gradations of similarity. A random length-matched label does
+the same. Consequently, a raw--romanized contrast conflates a linguistic claim
+(the correct sub-symbol correspondence matters) with a resolution claim (more
+character positions help). The shuffle test supplies the missing counterfactual.
+The 0.21 advantage over the control mean, and the fact that 90\% of controls
+score lower, leave room for a small linguistically structured effect, but 20
+permutations do not distinguish it decisively.
+
+Romanization also does not remove the corpus's domain problem. Both systems
+lose about 16 chrF2 points out of domain; the romanized advantage there is only
+0.67. This echoes the original ChrEn finding that out-of-domain Cherokee
+translation is substantially harder. More broadly, transliteration is not a
+theory-neutral preprocessing step. It chooses which internal similarities a
+model may see and can privilege segmental Latin structure over syllabary-based
+orthographic practice. Claims of phonological or cross-script benefit should
+therefore include matched nonlinguistic recodings, report domain transfer, and
+ultimately be validated with speaker-approved representations and human
+judgment. The proposed control is cheap, model-agnostic, and applicable to any
+low-resource setting in which transliteration expands source symbols.
+
+\vspace{-0.3em}
+\begin{thebibliography}{9}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+
+\bibitem[Goyal et al. 2020]{goyal2020}
+Goyal, Vikrant, Sourav Kumar, and Dipti Misra Sharma. 2020.
+\newblock Efficient neural machine translation for low-resource languages via exploiting related languages.
+\newblock \textit{ACL Student Research Workshop}. 162--168.
+
+\bibitem[Moosa et al. 2023]{moosa2023}
+Moosa, Ibraheem Muhammad, Mahmud Elahi Akhter, and Ashfia Binte Habib. 2023.
+\newblock Does transliteration help multilingual language modeling?
+\newblock \textit{Findings of EACL}. 670--685.
+
+\bibitem[Popovic 2015]{popovic2015}
+Popovic, Maja. 2015.
+\newblock chrF: Character n-gram F-score for automatic MT evaluation.
+\newblock \textit{WMT}. 392--395.
+
+\bibitem[Zhang et al. 2020]{zhang2020}
+Zhang, Shiyue, Benjamin Frey, and Mohit Bansal. 2020.
+\newblock ChrEn: Cherokee--English machine translation for endangered language revitalization.
+\newblock \textit{EMNLP}. 577--595.
+
+\bibitem[Zhang et al. 2022]{zhang2022}
+Zhang, Shiyue, Ben Frey, and Mohit Bansal. 2022.
+\newblock How can NLP help revitalize endangered languages? A case study and roadmap for Cherokee.
+\newblock \textit{ACL}. 1529--1541.
+
+\end{thebibliography}
+
+\end{document}

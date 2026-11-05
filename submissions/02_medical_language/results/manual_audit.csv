@@ -1,0 +1,41 @@
+sample_id,nct_id,label,note
+CAR-1,NCT06608823,sibling,separate exclusion
+CAR-2,NCT06692140,sibling,separate exclusion
+CAR-3,NCT07210151,sibling,separate numbered exclusion
+CAR-4,NCT06608823,sibling,separate exclusion
+CAR-5,NCT07278661,sibling,separate inclusion requirement
+CAR-6,NCT07769008,sibling,separate exclusion
+CAR-7,NCT06552637,sibling,separate physiological threshold
+CAR-8,NCT06978439,sibling,separate medication exclusion
+CAR-9,NCT06578104,sibling,separate exclusion
+CAR-10,NCT06424288,continuation,parallel thresholds under one parent requirement
+DIA-1,NCT04101669,sibling,separate exclusion
+DIA-2,NCT07676565,sibling,separate inclusion requirement
+DIA-3,NCT04101669,sibling,separate exclusion
+DIA-4,NCT07794579,sibling,separate exclusion
+DIA-5,NCT06273657,sibling,separate exclusion
+DIA-6,NCT06482944,sibling,separate exclusion
+DIA-7,NCT06706284,sibling,separate exclusion
+DIA-8,NCT04141878,sibling,separate inclusion requirement
+DIA-9,NCT03512132,sibling,separate exclusion
+DIA-10,NCT05633810,sibling,separate exclusion
+ONC-1,NCT07042295,continuation,following bullet defines medication class
+ONC-2,NCT04267848,sibling,separate exclusion
+ONC-3,NCT04269902,sibling,separate exclusion
+ONC-4,NCT06393374,sibling,separate inclusion requirement
+ONC-5,NCT07271355,sibling,separate exclusion
+ONC-6,NCT07388524,continuation,following bullet begins therefore and specifies pregnancy test
+ONC-7,NCT07061977,sibling,separate exclusion
+ONC-8,NCT05155033,sibling,separate laboratory threshold
+ONC-9,NCT07059884,sibling,separate exclusion
+ONC-10,NCT04267848,continuation,following bullet continues an or-list
+PSY-1,NCT05922878,sibling,separate inclusion requirement
+PSY-2,NCT06559306,sibling,separate inclusion requirement
+PSY-3,NCT06412315,sibling,separate exclusion
+PSY-4,NCT07903896,sibling,separate exclusion
+PSY-5,NCT07608796,sibling,separate inclusion requirement
+PSY-6,NCT07883824,sibling,separate inclusion requirement
+PSY-7,NCT07799480,sibling,separate exclusion
+PSY-8,NCT07593222,sibling,separate exclusion
+PSY-9,NCT07226661,sibling,separate inclusion requirement
+PSY-10,NCT06967857,sibling,separate inclusion requirement

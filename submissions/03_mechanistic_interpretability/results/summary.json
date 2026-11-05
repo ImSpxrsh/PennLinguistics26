@@ -1,0 +1,24 @@
+{
+  "model": "distilgpt2",
+  "n_items": 80,
+  "overall_accuracy": 0.925,
+  "congruent_accuracy": 0.975,
+  "incongruent_accuracy": 0.875,
+  "pp_accuracy": 1.0,
+  "rc_accuracy": 0.85,
+  "best_subject_probe_state": 5,
+  "best_subject_probe_accuracy": 0.9375,
+  "best_attractor_probe_accuracy": 1.0,
+  "largest_causal_drop_state": 6,
+  "largest_causal_margin_drop": 1.738875675201416,
+  "accuracy_after_final_subject_erasure": 0.7625,
+  "incongruent_accuracy_after_final_subject_erasure": 0.625,
+  "final_attractor_direction_margin_drop": 0.004815673828125,
+  "accuracy_after_final_attractor_erasure": 0.925,
+  "incongruent_accuracy_after_final_attractor_erasure": 0.875,
+  "mean_random_direction_accuracy_at_final": 0.9250000000000002,
+  "final_margin_drop_bootstrap_ci95": [
+    1.4535830986499787,
+    2.016509302854538
+  ]
+}

@@ -1,0 +1,5 @@
+domain,studies,studies_with_structured_units,criteria_lines,bullet_lines,negated_lines,spill_events,crossed_lines,extra_words,bullet_line_pct,negated_line_pct,spill_event_pct_of_negated,mean_crossed_lines,mean_extra_words
+cardiology,249,245,4057,4057,333,140,740,10045,100.0,8.2,42.0,5.29,71.75
+diabetes,243,240,3957,3957,354,150,623,10595,100.0,8.9,42.4,4.15,70.63
+oncology,250,241,5417,5417,975,465,3713,90330,100.0,18.0,47.7,7.98,194.26
+psychiatry,247,244,4242,4242,422,137,590,9502,100.0,9.9,32.5,4.31,69.36

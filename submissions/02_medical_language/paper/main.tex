@@ -1,0 +1,187 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper,margin=0.75in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{setspace}
+\setstretch{1.0}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\setlength{\tabcolsep}{5pt}
+\setlist{nosep,leftmargin=1.4em}
+\hypersetup{
+  hidelinks,
+  pdftitle={Newlines are scope: Negation lost in clinical-trial text normalization},
+  pdfauthor={},
+  pdfsubject={Anonymous PLC 51 abstract},
+  pdfkeywords={}
+}
+\pagestyle{plain}
+\renewcommand{\refname}{References}
+\newcommand{\ex}[1]{\textit{#1}}
+
+\begin{document}
+
+\begin{center}
+{\bfseries Newlines are scope: Negation lost in clinical-trial text normalization}
+\end{center}
+\vspace{-0.65em}
+
+Eligibility criteria determine who may enter a clinical trial, but they are
+distributed as free text that must be converted into computable constraints.
+Negation is consequently central to clinical information extraction, from
+NegEx (Chapman et al. 2001) to Criteria2Query (Yuan et al. 2019; Fang et al.
+2022) and recent trait-decomposition pipelines (Chen et al. 2026). These
+approaches model lexical cues, entities, and logical relations. We identify a
+prior representational problem: a criterion's line boundary can be its only
+overt scope boundary. ClinicalTrials.gov preserves Markdown-like bullets, but
+newline-flattening turns sibling criteria into one punctuation-delimited
+string. We ask how often this lossy normalization creates a possible negation
+span that contradicts the list structure.
+
+\textbf{Data and method.}
+We queried the public ClinicalTrials.gov API on November 5, 2026 for the 250
+most recently updated recruiting trials in each of four domains: cancer, heart
+disease, diabetes, and depression. After cross-query deduplication, the sample
+contained 989 trials; 970 had explicitly bulleted or numbered criteria. We
+identified 17,673 list units, joining unmarked wrapped lines to their preceding
+bullet before analysis. This avoids treating display wrapping as structure.
+
+We located a conservative set of clinical negation cues: \ex{no, not,
+without, never, neither, cannot, can't, must not, may not, absence of, free of},
+and \ex{negative for}. A \textsc{boundary-sensitive} token is a cue in a list
+unit that (i) lacks final punctuation and (ii) is followed by another unit in
+the same inclusion or exclusion section. A line-aware representation closes
+scope at the list boundary. A punctuation-only baseline deletes the boundary
+and holds scope open until \ex{., !, ?, ;}, or \ex{:}. This diagnostic measures
+a structural failure opportunity, not an observed error by a particular
+system.
+
+Example (1), from NCT07318805, shows three sibling exclusion criteria. The
+direct object of \ex{controlled} ends in (1a); neither (1b) nor (1c) is in the
+scope of \ex{cannot}. After newline deletion, however, no punctuation separates
+the three predicates.
+
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em,itemsep=0pt,topsep=2pt]
+\item \begin{tabular}[t]{@{}ll@{}}
+a. & \ex{Hypertension that cannot be controlled by optimal medical therapy}\\
+b. & \ex{Renal impairment}\\
+c. & \ex{Hepatic dysfunction}
+\end{tabular}
+\end{enumerate}
+\vspace{-0.25em}
+
+\textbf{Results.}
+Of 17,673 criteria, 2,084 (11.8\%) contained a cue. Among cue-bearing units,
+892 (42.8\%) were boundary-sensitive (Table~\ref{tab:domains}). With newlines
+removed, the punctuation baseline crossed a median of four subsequent criteria
+and 67 words before reaching a terminator. Rates differed by clinical domain,
+$\chi^2(3)=28.05$, $p<.001$, Cramer's $V=.116$: oncology had the highest rate
+(47.7\%) and psychiatry the lowest (32.5\%). Oncology's longer spill spans
+(median five criteria and 120 words) show that the effect is not merely one
+adjacent short phrase. In a deterministic manual audit of 40 events (10 per
+domain), 36 (90\%) were independent sibling constraints; four were coordinated
+or nested continuations. This motivates retaining indentation and overt
+continuation markers rather than treating every newline identically.
+
+\begin{table}[h]
+\centering
+\caption{Boundary-sensitive negation cues by domain. ``Trials'' includes only
+records with structured list units.}
+\label{tab:domains}
+\vspace{-0.35em}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Domain & Trials & Units & Cue units & Boundary-sensitive\\
+\midrule
+Oncology   & 241 & 5,417 & 975 & 465 (47.7\%)\\
+Cardiology & 245 & 4,057 & 333 & 140 (42.0\%)\\
+Diabetes   & 240 & 3,957 & 354 & 150 (42.4\%)\\
+Psychiatry & 244 & 4,242 & 422 & 137 (32.5\%)\\
+\midrule
+Total      & 970 & 17,673 & 2,084 & 892 (42.8\%)\\
+\bottomrule
+\end{tabular}
+\end{table}
+\vspace{-0.6em}
+
+\newpage
+\textbf{Analysis.}
+In this register, typography supplies a constituent boundary. Eligibility
+criteria are telegraphic predicates whose subject (the potential participant)
+and modal force (must/must not satisfy) are inherited from the section heading.
+A same-level bullet packages one constraint under that shared frame. The line
+break is therefore not decorative whitespace: it closes the current constraint
+before the next predicate is evaluated. Flattening (1) erases the evidence that
+\ex{renal impairment} is a separate exclusion, not an argument or continuation
+of \ex{cannot be controlled}.
+
+We propose \textsc{boundary-aware scope preservation}. Before lexical or neural
+analysis, each same-level criterion boundary is converted to a typed sentinel,
+\texttt{<CRIT>}; ordinary wrapped lines remain inside the unit, while indented
+sub-bullets attach to their parent. Negation scope may not cross \texttt{<CRIT>}
+unless an overt continuation marker (e.g., \ex{and} introducing a coordinated
+subcriterion) licenses attachment. This preprocessing change eliminates all
+892 mechanical spill opportunities by construction while leaving within-unit
+negation to existing systems. It is compatible with rule-based scope systems,
+semantic parsers, and language-model tokenizers.
+
+The finding complements annotated resources such as the 1,006-document Leaf
+Clinical Trials Corpus (Dobbins et al. 2022). Those resources richly represent
+entities and relations, but the input serialization itself remains part of the
+semantic problem. Recent work decomposes complex criteria into atomic traits
+and explicitly annotates negation (Chen et al. 2026); our result identifies a
+cheap, upstream boundary signal for that decomposition. It also offers a
+controlled benchmark: pair each original list with a newline-flattened version
+and test whether a parser preserves sibling polarity and logical independence.
+
+Three predictions follow. First, boundary preservation should improve
+precision most in oncology, where negation cues and unpunctuated lists are most
+dense. Second, models trained on flattened corpora should be less robust to
+original list formatting than models trained with typed boundaries. Third,
+human judgments should assign narrower scope to the formatted version of
+minimal pairs like (1), even when lexical content is held constant. The current
+cue-based study is not a gold-standard error analysis; rather, it quantifies
+how frequently a commonplace normalization destroys a linguistically licensed
+scope boundary. The manual audit was small and single-reviewed; clinician
+annotation remains necessary. In a safety-relevant medical register, preserving
+the original boundary should nevertheless be the default.
+
+\vspace{-0.3em}
+\begin{thebibliography}{9}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+
+\bibitem[Chapman et al. 2001]{chapman2001}
+Chapman, Wendy W., Will Bridewell, Paul Hanbury, Gregory F. Cooper \,\& Bruce G. Buchanan. 2001.
+\newblock A simple algorithm for identifying negated findings and diseases in discharge summaries.
+\newblock \textit{Journal of Biomedical Informatics} 34(5). 301--310.
+
+\bibitem[Chen et al. 2026]{chen2026}
+Chen, Hongyu, Lingfei Qian, Xing He et al. 2026.
+\newblock Clinical trial eligibility criteria decomposition and parsing with large language models.
+\newblock \textit{Studies in Health Technology and Informatics}. doi:10.3233/SHTI250928.
+
+\bibitem[Dobbins et al. 2022]{dobbins2022}
+Dobbins, Nathan J., Taylor Mullen, Ozgur Unal \,\& Meliha Yetisgen. 2022.
+\newblock The Leaf Clinical Trials Corpus: A new resource for query generation from clinical trial eligibility criteria.
+\newblock \textit{Scientific Data} 9. 490.
+
+\bibitem[Fang et al. 2022]{fang2022}
+Fang, Yilu et al. 2022.
+\newblock Combining human and machine intelligence for clinical trial eligibility querying.
+\newblock \textit{Journal of the American Medical Informatics Association} 29(7). 1161--1171.
+
+\bibitem[Yuan et al. 2019]{yuan2019}
+Yuan, Chi et al. 2019.
+\newblock Criteria2Query: A natural language interface to clinical databases for cohort definition.
+\newblock \textit{Journal of the American Medical Informatics Association} 26(4). 294--305.
+
+\end{thebibliography}
+
+\end{document}

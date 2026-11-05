@@ -1,0 +1,187 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper,margin=0.75in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{needspace}
+\usepackage{hyperref}
+\usepackage{setspace}
+\setstretch{1.0}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\setlength{\tabcolsep}{5pt}
+\setlist{nosep,leftmargin=1.5em}
+\hypersetup{
+  hidelinks,
+  pdftitle={Encoded does not mean used: Causal separation of subject and attractor number in a Transformer},
+  pdfauthor={},
+  pdfsubject={Anonymous PLC 51 abstract},
+  pdfkeywords={}
+}
+\pagestyle{plain}
+\newcommand{\ex}[1]{\textit{#1}}
+
+\begin{document}
+
+\begin{center}
+{\bfseries Encoded does not mean used: Causal separation of subject and\\
+attractor number in a Transformer}
+\end{center}
+\vspace{-0.65em}
+
+A language model predicting the verb in (1) has access to two number values:
+the hierarchical subject is singular, while the linearly nearest noun is
+plural. Behavioral work shows that Transformers are sensitive to this
+distinction, but mechanistic studies face a basic inference problem. A feature
+may be decodable without being used, and a head may display syntactic attention
+without controlling the output (Elazar et al. 2021; Timkey \& Linzen 2026).
+We use agreement attraction to separate these possibilities. In a controlled
+DistilGPT-2 pilot, nearest-noun number becomes perfectly decodable, yet erasing
+a single subject-number direction---not the attractor direction or matched random directions---selectively
+damages agreement. The result supplies causal evidence that hierarchical and
+linear number cues coexist in the residual stream but have different
+functional status.
+
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em,topsep=2pt]
+\item \ex{The key near the cabinets \{is/are\}\ldots}
+\end{enumerate}
+\vspace{-0.1em}
+
+\textbf{Question and predictions.}
+Causal analyses have localized agreement information to neurons, heads, and
+residual-stream directions (Finlayson et al. 2021; Ferrando \& Costa-juss\`a
+2024). Separately, GPT-2 exhibits attraction effects compatible with
+similarity-based interference (Ryu \& Lewis 2021). What remains unclear in a
+small, inspectable model is whether a highly accessible attractor
+representation is also the representation that drives the inflection. A
+purely diagnostic account predicts that both numbers can be decoded but makes
+no prediction about use. A nearest-noun mechanism predicts that removing
+attractor information should be at least as consequential as removing subject
+information, especially when the two conflict. A hierarchical mechanism
+instead predicts a selective effect of subject-number erasure on incongruent
+items.
+
+\textbf{Materials and behavioral result.}
+We generated 80 prefixes from ten lexical sets, crossing subject number
+(singular/plural), attractor number (singular/plural), and structure. In the PP
+condition, the attractor was inside a subject-modifying PP as in (1); in the
+relative-clause condition it was the embedded subject, as in \ex{The key that
+the cabinets can describe}. All target forms, \ex{is} and \ex{are}, are single
+tokens. We measured their next-token logit contrast in DistilGPT-2
+(81.9M parameters). The model selected the grammatical form on 92.5\% of items
+(74/80). Accuracy was 97.5\% for number-congruent items but 87.5\% for
+incongruent items; it was 100\% in PPs and 85\% in relative clauses. Thus the
+model is accurate enough for an intervention, while retaining the expected
+attraction signature.
+
+\textbf{Diagnostic analysis.}
+At the final prefix position, we extracted the embedding state and the residual
+stream after each of six Transformer blocks. For every state, separate logistic
+probes predicted subject and attractor number. Five-fold cross-validation held
+out both structures and all four number conditions for two complete lexical
+sets per fold. Table~1 shows that subject number rises from chance at the
+embedding state to 93.75\% after block 5. Strikingly, attractor number is easier:
+it reaches 100\% after blocks 3 and 4. Decodability alone would therefore
+suggest no privileged status for hierarchical number.
+
+\begin{table}[h]
+\centering
+\caption{Group-cross-validated probe accuracy and causal change in the
+correct-inflection logit margin. State 0 is the embedding output.}
+\vspace{-0.35em}
+\begin{tabular}{@{}rrrrrr@{}}
+\toprule
+State & Subj. probe & Attr. probe & Subj. erase & Attr. erase & Random\\
+\midrule
+0 & 50.00 & 75.00 & -- & -- & --\\
+1 & 71.25 & 86.25 & $-0.000$ & 0.004 & 0.000\\
+2 & 58.75 & 97.50 & 0.012 & $-0.006$ & 0.002\\
+3 & 73.75 & 100.00 & 0.030 & $-0.018$ & 0.001\\
+4 & 91.25 & 100.00 & 0.382 & $-0.014$ & 0.000\\
+5 & 93.75 & 97.50 & 0.817 & 0.003 & 0.002\\
+6 & 92.50 & 88.75 & 1.739 & 0.005 & 0.002\\
+\bottomrule
+\end{tabular}
+\end{table}
+\vspace{-0.55em}
+
+\textbf{Causal intervention.}
+For each post-block state, we fit subject- and attractor-number probes on the
+balanced stimulus set, centered each weight vector, and separately projected
+the final-position residual stream away from each one-dimensional direction.
+We then reran the unchanged remainder of the model. As a dimensionality-matched
+control, we repeated the procedure with ten isotropic random directions. Subject erasure
+has almost no effect in blocks 1--3, then produces increasing correct-margin
+losses of 0.382, 0.817, and 1.739 logits after blocks 4--6. The final effect is
+stable under a paired 10,000-sample bootstrap, 95\% CI [1.454, 2.017].
+Accuracy falls from 92.5\% to 76.25\%; on the diagnostic incongruent items it
+falls from 87.5\% to 62.5\%. Attractor erasure leaves both accuracies unchanged
+and changes the final margin by only 0.005 logits; random erasure likewise
+leaves accuracy at 92.5\% and changes the margin by 0.002.
+
+\Needspace{4\baselineskip}
+\textbf{Analysis and contribution.}
+The probe results establish coexistence: the representation preserves both the
+structurally licensed controller and a salient linear distractor. The
+intervention establishes an asymmetry in use. The model's agreement preference
+depends on a late-emerging subject-number direction even though attractor
+number is more linearly accessible at intermediate states. This dissociation
+clarifies what agreement \emph{knowledge} amounts to mechanistically: robust
+encoding of a cue is not sufficient evidence that the cue participates in the
+computation.
+
+The late locus also connects two earlier findings. Finlayson et al. (2021)
+report structure-dependent agreement mechanisms, while Ferrando and
+Costa-juss\`a (2024) identify a subject-number direction written into the final
+residual stream. Our result shows why a competing noun can remain decodable
+without controlling English copular inflection: hierarchical selection can be
+implemented by a targeted late readout rather than deletion of the distractor.
+The proposal is deliberately limited to one model and 80 items. Follow-up work
+should cross-fit the intervention direction, test additional agreement
+paradigms and model seeds, and compare direct direction erasure with more
+targeted methods such as mean projection or LEACE (Dobrzeniecka et al. 2025).
+Even at pilot scale, however, the encoding/use dissociation is large,
+controlled, and linguistically interpretable.
+
+\vspace{-0.35em}
+\begin{thebibliography}{9}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+
+\bibitem[Dobrzeniecka et al. 2025]{dobrzeniecka}
+Dobrzeniecka, Alicja, Antske Fokkens \& Pia Sommerauer. 2025.
+Improving causal interventions in amnesic probing with mean projection or LEACE.
+\textit{Findings of ACL}, 12981--12993.
+
+\bibitem[Elazar et al. 2021]{elazar}
+Elazar, Yanai, Shauli Ravfogel, Alon Jacovi \& Yoav Goldberg. 2021.
+Amnesic probing: Behavioral explanation with amnesic counterfactuals.
+\textit{TACL} 9. 160--175.
+
+\bibitem[Ferrando \& Costa-juss\`a 2024]{ferrando}
+Ferrando, Javier \& Marta R. Costa-juss\`a. 2024.
+On the similarity of circuits across languages: A case study on subject-verb agreement.
+\textit{Findings of EMNLP}, 10115--10125.
+
+\bibitem[Finlayson et al. 2021]{finlayson}
+Finlayson, Matthew, Aaron Mueller, Sebastian Gehrmann, Stuart Shieber,
+Tal Linzen \& Yonatan Belinkov. 2021.
+Causal analysis of syntactic agreement mechanisms in neural language models.
+\textit{ACL-IJCNLP}, 1828--1843.
+
+\bibitem[Ryu \& Lewis 2021]{ryu}
+Ryu, Soo Hyun \& Richard Lewis. 2021.
+Accounting for agreement phenomena in sentence comprehension with Transformer
+language models. \textit{CMCL}, 61--71.
+
+\bibitem[Timkey \& Linzen 2026]{timkey}
+Timkey, William \& Tal Linzen. 2026.
+Do syntax heads influence model behavior?
+\textit{arXiv:2610.19231}.
+
+\end{thebibliography}
+
+\end{document}
+

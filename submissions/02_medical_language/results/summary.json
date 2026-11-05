@@ -1,0 +1,80 @@
+{
+  "definition": "A spill event is a negation-cue line without terminal punctuation followed by another line in the same eligibility section. A punctuation-only representation would keep the negation span open across that line break.",
+  "overall": {
+    "studies": 989,
+    "studies_with_structured_units": 970,
+    "criteria_lines": 17673,
+    "bullet_lines": 17673,
+    "negated_lines": 2084,
+    "spill_events": 892,
+    "crossed_lines": 5666,
+    "extra_words": 120472,
+    "bullet_line_pct": 100.0,
+    "negated_line_pct": 11.8,
+    "spill_event_pct_of_negated": 42.8,
+    "mean_crossed_lines": 6.35,
+    "mean_extra_words": 135.06
+  },
+  "domains": {
+    "cardiology": {
+      "studies": 249,
+      "studies_with_structured_units": 245,
+      "criteria_lines": 4057,
+      "bullet_lines": 4057,
+      "negated_lines": 333,
+      "spill_events": 140,
+      "crossed_lines": 740,
+      "extra_words": 10045,
+      "bullet_line_pct": 100.0,
+      "negated_line_pct": 8.2,
+      "spill_event_pct_of_negated": 42.0,
+      "mean_crossed_lines": 5.29,
+      "mean_extra_words": 71.75
+    },
+    "diabetes": {
+      "studies": 243,
+      "studies_with_structured_units": 240,
+      "criteria_lines": 3957,
+      "bullet_lines": 3957,
+      "negated_lines": 354,
+      "spill_events": 150,
+      "crossed_lines": 623,
+      "extra_words": 10595,
+      "bullet_line_pct": 100.0,
+      "negated_line_pct": 8.9,
+      "spill_event_pct_of_negated": 42.4,
+      "mean_crossed_lines": 4.15,
+      "mean_extra_words": 70.63
+    },
+    "oncology": {
+      "studies": 250,
+      "studies_with_structured_units": 241,
+      "criteria_lines": 5417,
+      "bullet_lines": 5417,
+      "negated_lines": 975,
+      "spill_events": 465,
+      "crossed_lines": 3713,
+      "extra_words": 90330,
+      "bullet_line_pct": 100.0,
+      "negated_line_pct": 18.0,
+      "spill_event_pct_of_negated": 47.7,
+      "mean_crossed_lines": 7.98,
+      "mean_extra_words": 194.26
+    },
+    "psychiatry": {
+      "studies": 247,
+      "studies_with_structured_units": 244,
+      "criteria_lines": 4242,
+      "bullet_lines": 4242,
+      "negated_lines": 422,
+      "spill_events": 137,
+      "crossed_lines": 590,
+      "extra_words": 9502,
+      "bullet_line_pct": 100.0,
+      "negated_line_pct": 9.9,
+      "spill_event_pct_of_negated": 32.5,
+      "mean_crossed_lines": 4.31,
+      "mean_extra_words": 69.36
+    }
+  }
+}

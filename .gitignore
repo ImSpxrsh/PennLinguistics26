@@ -1,6 +1,8 @@
-data/repos/
-abstract/*.aux
-abstract/*.log
-abstract/*.out
+**/data/repos/
+*.aux
+*.log
+*.out
 tmp/
 .DS_Store
+__pycache__/
+*.pyc

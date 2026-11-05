@@ -1,28 +1,29 @@
 # Penn Linguistics Conference 51
 
-Anonymous abstract and reproducibility materials for a study of subject omission in Git commit messages.
+Anonymous submission candidates and reproducibility materials.
 
-## Files
+## Projects
 
-- `abstract/plc51_abstract_anonymous.pdf` - submission-ready two-page PDF
-- `abstract/main.tex` - editable LaTeX source
-- `analysis/analysis.py` - corpus coding and statistical summary
-- `analysis/fetch_data.sh` - fetches the pinned public repository histories
-- `results/coded_commits.csv` - coded observations used in the abstract
-- `results/summary.txt` - aggregate counts
+| Folder | Project | Core result |
+|---|---|---|
+| [`01_git_register`](submissions/01_git_register) | Subject omission in Git commits | Repository convention nearly categorically selects base or past verb form. |
+| [`02_medical_language`](submissions/02_medical_language) | Negation scope in trial criteria | 42.8% of cue-bearing units risk cross-criterion scope spill after newline flattening. |
+| [`03_mechanistic_interpretability`](submissions/03_mechanistic_interpretability) | Subject number inside DistilGPT-2 | Subject-direction erasure reduces agreement accuracy from 92.5% to 76.25%; attractor erasure has no effect. |
+| [`04_low_resource_translation`](submissions/04_low_resource_translation) | Cherokee romanization controls | Shuffled labels reproduce about 80% of the apparent romanization gain. |
 
-## Reproduce the analysis
+Each project contains:
 
-```sh
-./analysis/fetch_data.sh
-python3 analysis/analysis.py
-```
+- `README.md` - project overview and commands
+- `paper/main.tex` - anonymous abstract source
+- `paper/abstract.pdf` - submission PDF
+- `analysis/` - executable analysis and dependencies
+- `results/` - exact reported outputs
+- `notes/` - research decisions, sources, and limitations where applicable
 
-## Build the abstract
+The strongest complementary pair is `02_medical_language` plus `04_low_resource_translation`. Projects 01 and 03 remain submission-ready alternatives.
 
-```sh
-pdflatex -interaction=nonstopmode -halt-on-error \
-  -output-directory=abstract abstract/main.tex
-```
+## Submission limit
 
-The submitted PDF is anonymous and contains no author or affiliation metadata.
+PLC51 permits each author on no more than two abstracts and permits no more than one single-authored abstract per author. The folders are alternatives; they are not all intended to be submitted under the same author list.
+
+All submission PDFs are anonymous and omit author and affiliation metadata.
