@@ -15,7 +15,7 @@
 \setlist{nosep,leftmargin=1.5em}
 \hypersetup{
   hidelinks,
-  pdftitle={Encoded does not mean used: Causal separation of subject and attractor number in a Transformer},
+  pdftitle={Cross-fitted causal erasure separates subject and attractor number in DistilGPT-2},
   pdfauthor={},
   pdfsubject={Anonymous PLC 51 abstract},
   pdfkeywords={}
@@ -26,124 +26,115 @@
 \begin{document}
 
 \begin{center}
-{\bfseries Encoded does not mean used: Causal separation of subject and\\
-attractor number in a Transformer}
+{\bfseries Cross-fitted causal erasure separates subject and attractor\\
+number in DistilGPT-2}
 \end{center}
 \vspace{-0.65em}
 
-A language model predicting the verb in (1) has access to two number values:
-the hierarchical subject is singular, while the linearly nearest noun is
-plural. Behavioral work shows that Transformers are sensitive to this
-distinction, but mechanistic studies face a basic inference problem. A feature
-may be decodable without being used, and a head may display syntactic attention
-without controlling the output (Elazar et al. 2021; Timkey \& Linzen 2026).
-We use agreement attraction to separate these possibilities. In a controlled
-DistilGPT-2 pilot, nearest-noun number becomes perfectly decodable, yet erasing
-a single subject-number direction---not the attractor direction or matched random directions---selectively
-damages agreement. The result supplies causal evidence that hierarchical and
-linear number cues coexist in the residual stream but have different
-functional status.
+Agreement attraction places two number values in competition. In (1), the
+hierarchical subject is singular and the closest noun is plural. This contrast
+also exposes a familiar problem in mechanistic interpretation: a probe can
+recover a feature that downstream layers ignore (Elazar et al. 2021), and a
+specialized attention head may have little control over the output (Timkey \&
+Linzen 2026). We test which number representation contributes to the next-word
+preference of DistilGPT-2. Nearest-noun number reaches perfect probe accuracy,
+while cross-fitted erasure of a subject-correlated direction produces a
+1.578-logit loss relative to attractor-direction erasure. The effect appears
+late and survives a lexical-cluster bootstrap.
 
 \begin{enumerate}[label=(\arabic*),leftmargin=2.2em,topsep=2pt]
 \item \ex{The key near the cabinets \{is/are\}\ldots}
 \end{enumerate}
 \vspace{-0.1em}
 
-\textbf{Question and predictions.}
-Causal analyses have localized agreement information to neurons, heads, and
+\textbf{Question.}
+Causal work has localized agreement information to model components and
 residual-stream directions (Finlayson et al. 2021; Ferrando \& Costa-juss\`a
-2024). Separately, GPT-2 exhibits attraction effects compatible with
-similarity-based interference (Ryu \& Lewis 2021). What remains unclear in a
-small, inspectable model is whether a highly accessible attractor
-representation is also the representation that drives the inflection. A
-purely diagnostic account predicts that both numbers can be decoded but makes
-no prediction about use. A nearest-noun mechanism predicts that removing
-attractor information should be at least as consequential as removing subject
-information, especially when the two conflict. A hierarchical mechanism
-instead predicts a selective effect of subject-number erasure on incongruent
-items.
+2024). GPT-2 also shows attraction effects compatible with similarity-based
+interference (Ryu \& Lewis 2021). These findings leave open whether the
+accessible representation of the nearby noun contributes to inflection.
+A nearest-noun account predicts a substantial effect when its fitted direction
+is removed, with the largest cost on conflicting-number items. A hierarchical
+account predicts a larger cost for the fitted subject direction.
 
 \textbf{Materials and behavioral result.}
-We generated 80 prefixes from ten lexical sets, crossing subject number
-(singular/plural), attractor number (singular/plural), and structure. In the PP
+We generated 80 prefixes from ten lexical sets. The design crossed subject and
+attractor number within two structures. In the PP
 condition, the attractor was inside a subject-modifying PP as in (1); in the
 relative-clause condition it was the embedded subject, as in \ex{The key that
 the cabinets can describe}. All target forms, \ex{is} and \ex{are}, are single
 tokens. We measured their next-token logit contrast in DistilGPT-2
 (81.9M parameters). The model selected the grammatical form on 92.5\% of items
 (74/80). Accuracy was 97.5\% for number-congruent items but 87.5\% for
-incongruent items; it was 100\% in PPs and 85\% in relative clauses. Thus the
-model is accurate enough for an intervention, while retaining the expected
-attraction signature.
+incongruent items; it was 100\% in PPs and 85\% in relative clauses. The six
+errors were concentrated in relative clauses, especially those with plural
+subjects (75\% accuracy). We therefore treat the analysis as a controlled pilot.
+Its scope does not extend to agreement behavior across the model family.
 
 \textbf{Diagnostic analysis.}
 At the final prefix position, we extracted the embedding state and the residual
-stream after each of six Transformer blocks. For every state, separate logistic
-probes predicted subject and attractor number. Five-fold cross-validation held
-out both structures and all four number conditions for two complete lexical
-sets per fold. Table~1 shows that subject number rises from chance at the
-embedding state to 93.75\% after block 5. Strikingly, attractor number is easier:
-it reaches 100\% after blocks 3 and 4. Decodability alone would therefore
-suggest no privileged status for hierarchical number.
+stream after each of six Transformer blocks. Separate logistic probes predicted
+subject and attractor number. Each of five folds held out two complete lexical
+sets, including both structures and every number condition. Subject-number
+accuracy is at chance in the embedding state and reaches 93.75\% after block 5.
+Attractor number is easier to decode and reaches 100\% after blocks 3 and 4.
 
 \begin{table}[h]
 \centering
-\caption{Group-cross-validated probe accuracy and causal change in the
-correct-inflection logit margin. State 0 is the embedding output.}
+\caption{Group-cross-validated probe accuracy (\%) and cross-fitted loss in
+the correct-inflection logit margin. State 0 is the embedding output.}
 \vspace{-0.35em}
 \begin{tabular}{@{}rrrrrr@{}}
 \toprule
 State & Subj. probe & Attr. probe & Subj. erase & Attr. erase & Random\\
 \midrule
 0 & 50.00 & 75.00 & -- & -- & --\\
-1 & 71.25 & 86.25 & $-0.000$ & 0.004 & 0.000\\
-2 & 58.75 & 97.50 & 0.012 & $-0.006$ & 0.002\\
-3 & 73.75 & 100.00 & 0.030 & $-0.018$ & 0.001\\
-4 & 91.25 & 100.00 & 0.382 & $-0.014$ & 0.000\\
-5 & 93.75 & 97.50 & 0.817 & 0.003 & 0.002\\
-6 & 92.50 & 88.75 & 1.739 & 0.005 & 0.002\\
+1 & 71.25 & 86.25 & 0.003 & 0.001 & 0.000\\
+2 & 58.75 & 97.50 & 0.008 & $-0.006$ & 0.002\\
+3 & 73.75 & 100.00 & 0.019 & $-0.030$ & $-0.001$\\
+4 & 91.25 & 100.00 & 0.332 & $-0.005$ & 0.000\\
+5 & 93.75 & 97.50 & 0.712 & $-0.003$ & $-0.000$\\
+6 & 92.50 & 88.75 & 1.578 & 0.000 & 0.003\\
 \bottomrule
 \end{tabular}
 \end{table}
 \vspace{-0.55em}
 
 \textbf{Causal intervention.}
-For each post-block state, we fit subject- and attractor-number probes on the
-balanced stimulus set, centered each weight vector, and separately projected
-the final-position residual stream away from each one-dimensional direction.
-We then reran the unchanged remainder of the model. As a dimensionality-matched
-control, we repeated the procedure with ten isotropic random directions. Subject erasure
-has almost no effect in blocks 1--3, then produces increasing correct-margin
-losses of 0.382, 0.817, and 1.739 logits after blocks 4--6. The final effect is
-stable under a paired 10,000-sample bootstrap, 95\% CI [1.454, 2.017].
-Accuracy falls from 92.5\% to 76.25\%; on the diagnostic incongruent items it
-falls from 87.5\% to 62.5\%. Attractor erasure leaves both accuracies unchanged
-and changes the final margin by only 0.005 logits; random erasure likewise
-leaves accuracy at 92.5\% and changes the margin by 0.002.
+Each test item received a direction and center fit on the other eight lexical
+sets. We separately projected its final-position state away from the fitted
+subject and attractor directions, then ran the remaining blocks. Ten random
+directions per fold supplied a dimensionality-matched control. The
+subject-direction loss is small through block 3, then grows to 0.332, 0.712,
+and 1.578 logits after blocks 4--6. Final accuracy becomes 66.25\%, against a
+92.5\% baseline; incongruent accuracy becomes 55\%, against 87.5\%. The fitted attractor
+direction changes the margin by less than 0.001 logits and leaves both
+accuracies unchanged. Random-direction erasure changes the final margin by
+0.003 logits. The final subject-minus-attractor contrast is 1.578 logits; a
+10,000-sample bootstrap over lexical sets gives a 95\% CI of [1.460, 1.686].
 
 \Needspace{4\baselineskip}
-\textbf{Analysis and contribution.}
-The probe results establish coexistence: the representation preserves both the
-structurally licensed controller and a salient linear distractor. The
-intervention establishes an asymmetry in use. The model's agreement preference
-depends on a late-emerging subject-number direction even though attractor
-number is more linearly accessible at intermediate states. This dissociation
-clarifies what agreement \emph{knowledge} amounts to mechanistically: robust
-encoding of a cue is not sufficient evidence that the cue participates in the
-computation.
+\textbf{Analysis.}
+The residual stream preserves linearly recoverable information about the
+controller and the nearby distractor. Their fitted directions have different
+causal effects. The subject-correlated direction contributes to the
+model's late logit contrast even at states where attractor number has higher
+probe accuracy. Probe accessibility therefore overstates the causal role of
+the fitted attractor direction.
 
-The late locus also connects two earlier findings. Finlayson et al. (2021)
-report structure-dependent agreement mechanisms, while Ferrando and
-Costa-juss\`a (2024) identify a subject-number direction written into the final
-residual stream. Our result shows why a competing noun can remain decodable
-without controlling English copular inflection: hierarchical selection can be
-implemented by a targeted late readout rather than deletion of the distractor.
-The proposal is deliberately limited to one model and 80 items. Follow-up work
-should cross-fit the intervention direction, test additional agreement
-paradigms and model seeds, and compare direct direction erasure with more
-targeted methods such as mean projection or LEACE (Dobrzeniecka et al. 2025).
-Even at pilot scale, however, the encoding/use dissociation is large,
-controlled, and linguistically interpretable.
+The late onset agrees with Ferrando and Costa-juss\`a's (2024) subject-number
+direction in the final residual stream and with Finlayson et al.'s (2021)
+structure-dependent agreement mechanisms. The evidence supports a narrow
+claim: in this pilot, a cross-fitted subject-correlated direction contributes
+to the copular logit contrast. Under the same intervention, the most accessible
+linear attractor direction has no measurable effect. The erasure effect is
+similar across PPs and relative clauses (1.616 versus 1.540 logits), though it
+is asymmetric by subject number. Final erasure lowers singular accuracy to
+42.5\%; plural accuracy remains at 90\%. The fitted axis may combine number with
+a singular-specific output bias. A one-dimensional null effect also leaves
+other attractor representations untested. Replication should use larger
+stimulus sets and model families, then compare projection methods such as LEACE
+or mean projection (Dobrzeniecka et al. 2025).
 
 \vspace{-0.35em}
 \begin{thebibliography}{9}

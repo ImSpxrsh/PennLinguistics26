@@ -17,7 +17,7 @@
 \setlist{nosep,leftmargin=1.4em}
 \hypersetup{
   hidelinks,
-  pdftitle={One genre, two grammars: Community-conditioned subject omission in Git commit messages},
+  pdftitle={Fix or fixed? Repository norms and subject omission in Git commits},
   pdfauthor={},
   pdfsubject={Anonymous PLC 51 abstract},
   pdfkeywords={}
@@ -29,49 +29,53 @@
 \begin{document}
 
 \begin{center}
-{\bfseries One genre, two grammars: Community-conditioned subject omission\\
-in Git commit messages}
+{\bfseries Fix or \textit{fixed}? Repository norms and subject omission in Git commits}
 \end{center}
 \vspace{-0.65em}
 
-English permits null subjects in restricted registers, most prominently diaries
-(Haegeman 1997, 2013; Weir 2012). Git commit subjects appear to add
-a technologically mediated case: \ex{Fix parser} and \ex{Add tests} are routinely
-called \emph{imperatives} in developer style guides. That label is not innocent.
-An imperative analysis supplies both the missing subject (\textsc{you}) and the
-base verb, whereas a register-drop analysis treats omission as independently
-licensed by discourse and syntax. We show that the imperative diagnosis fails
-as a general analysis. The same communicative task is realized by two nearly
-categorical community conventions, one with a base verb and one with active
-past tense. The contrast extends register-conditioned subject omission to
-collaborative technical writing and shows that grammatical analysis of short
-digital texts must include community norms and interface metadata.
+English null subjects occur in a small set of registers, including diaries
+(Haegeman 1997, 2013; Weir 2012). Git commit subjects offer a new test case.
+Developer guides usually call strings such as \ex{Fix parser} imperatives. The
+label supplies an understood \textsc{you} and explains the base form at once.
+Yet commits report work that has already been done, and some projects require
+\ex{Fixed parser} instead. We ask whether verbal form follows the discourse
+function of the commit or a local writing norm. Fourteen public repositories
+show a sharp answer: thirteen overwhelmingly use the base, while Django uses
+active past tense. Both patterns omit the author. The single-community contrast
+separates subject omission from imperative morphology and exposes a role for
+repository convention in a tightly constrained technical register.
 
 \textbf{Data and method.}
 We collected the latest 1,000 non-merge commit subjects from each of 14 major
 public repositories (14,000 subjects total) on November 5, 2026. The sample
-spans programming languages, web frameworks, and data-science projects.
+includes programming languages and web frameworks as well as data-science projects.
 Bracketed review tags and one repository scope prefix (e.g.,
-\ex{net/http:}) were treated as metadata outside the clause. Automatic merges,
-backports, and explicit reverts were excluded. To avoid relying on a general
+\ex{net/http:}) were treated as metadata outside the clause. Automatic merges
+and backports were excluded. To avoid relying on a general
 parser trained on edited prose, we used a conservative, auditable
 criterion: the first clausal token had to instantiate one of 40 hand-specified
 English paradigms whose spelling distinguishes \textsc{base}, \textsc{past},
 \textsc{3sg}, and \textsc{progressive} (e.g., \ex{fix/fixed/fixes/fixing}).
-This retained 8,291 subjects (59.2\%). The criterion is transparent and exactly
-reproducible from the public commit histories.
+This retained 8,291 subjects (59.2\%). The released script reproduces each
+coding decision from the public histories.
 
 \textbf{Results.}
 Of the retained subjects, 7,484 began with a base form, 752 with a past form,
 23 with third-person singular, and 32 with a progressive. Table~\ref{tab:repos}
-reports the decisive base--past comparison. Thirteen repositories selected the
+reports the base--past comparison. Thirteen repositories selected the
 base form in 97.4--100\% of tokens; Django selected the past in all 685
-base--past tokens. The association between repository and form is extremely
-large, $\chi^2(13)=7442.9$, $p<.001$, Cramer's $V=.951$ ($N=8{,}236$).
-Lexical choice cannot explain the split: \textit{fix}, for example, occurs 2,213
-times as \ex{fix} and 537 times as \ex{fixed} across the corpus. Nor are the
-past forms reduced passives: attested strings such as (1b) contain an overt
-direct object.
+base--past tokens. As a descriptive measure, repository identity accounts for
+most of the base--past association, $\chi^2(13)=7442.9$, $p<.001$, Cramer's
+$V=.951$ ($N=8{,}236$). We do not treat token-level significance as
+population-level inference because all past-dominant data come from Django.
+The lexical control is more informative. Twenty-three lemmas occur in Django
+and in at least one comparison repository. Django has 685 past and zero base
+spellings for those lemmas; the other repositories have 6,931 base and 62 past
+spellings (99.1\% base). For \textit{fix} alone, Django contributes 523
+\ex{fixed} tokens, while the other repositories contribute 2,213 \ex{fix} and
+14 \ex{fixed} tokens. A fixed-seed manual check of 80 base and 80 past items
+found a verbal use in 159/160 cases. Past-form strings such as (1b) contain an
+overt direct object, which rules out a reduced passive reading.
 
 \begin{enumerate}[label=(\arabic*),leftmargin=2.2em,itemsep=0pt,topsep=2pt]
 \item \begin{tabular}[t]{@{}ll@{}}
@@ -102,46 +106,38 @@ Flask    & 639 & 12 & HTTPX    & 597 & 16\\
 \end{table}
 \vspace{-0.65em}
 
-The Django distribution is independently corroborated by its public contributor
-guide, which explicitly requires past tense and illustrates \ex{Fixed Unicode
-bug} (Django Software Foundation 2026); several other public guides prescribe the
-imperative base. These prescriptions are not noise imposed on grammar.
-They are evidence that a speech community conventionalizes the realization of
-a genre-specific construction.
-
 \newpage
+Django's public contributor guide requires past tense and gives \ex{Fixed
+Unicode bug} as its model (Django Software Foundation 2026). Guides for several
+comparison projects prescribe the imperative base. The corpus distribution
+tracks these explicit repository-level norms.
+
 \textbf{Analysis.}
-The past pattern cannot be an imperative: English imperatives lack past-tense
-morphology, and the transitive objects in (1b) exclude a passive parse. It
-instead instantiates written-register subject omission. The omitted argument
-is recoverable as the responsible developer or team, made continuously salient
-by the author field attached to every commit. Its clause is a root and the
-gap is leftmost once non-clausal interface labels are removed, matching core
-restrictions on diary drop (Haegeman 2013). Crucially, however, the
-base pattern is not thereby proven directive. A commit subject reports a
-completed change; it does not ordinarily direct its reader to perform one.
-We therefore analyze the two patterns as competing allostructions of a
-\textsc{commit-report} construction:
+English imperatives lack past-tense morphology, so the Django pattern requires
+written-register subject omission. The missing argument is the responsible
+developer or team, identified in the author field beside every commit. The
+clause is a root, and its gap is leftmost after non-clausal scope labels have
+been removed. These are the central structural restrictions on diary drop
+(Haegeman 2013). A base-form commit still reports a completed change; its form
+alone does not establish directive force. We treat the two patterns as local
+realizations of a \textsc{commit-report} construction:
 
 \[
 \left[\textsc{commit-report}\;\varnothing_{\mathrm{author/team}}\;
 V_{\{\mathrm{base},\mathrm{past}\}}\;XP\right].
 \]
 
-The genre licenses a recoverable left-edge subject, while repository-level
-convention selects the verbal realization. On this account, \emph{imperative}
-is a useful style label but an unreliable morphosyntactic diagnosis: base
-morphology, null subject, and directive force come apart.
+The construction licenses a recoverable left-edge subject. Repository convention
+selects its verbal realization. Under this analysis, \emph{imperative} remains
+a style-guide label; base morphology does not settle the clause's syntax or
+illocutionary force.
 
-This analysis makes three testable predictions. First, authors moving between
-repositories should accommodate their verb form to the destination community.
-Second, removing visible authorship metadata should reduce the acceptability of
-past-form commit reports more than overt-subject paraphrases. Third, material
-that is syntactically clause-internal, unlike scope labels, should block
-left-edge omission in the past construction. More broadly, the result supports
-a view of digital registers in which platform fields participate in
-recoverability, but community practice determines which grammatical resources
-realize the same discourse function.
+Two follow-up tests distinguish this account from a fixed genre grammar.
+Contributors who move between projects should adopt the destination project's
+tense norm. In an acceptability experiment, hiding the author field should hurt
+past-form null-subject reports more than versions with an overt subject. The
+present corpus supplies the starting observation: identical lemmas performing
+the same reporting task take different morphology at a repository boundary.
 
 \vspace{-0.35em}
 \begin{thebibliography}{9}

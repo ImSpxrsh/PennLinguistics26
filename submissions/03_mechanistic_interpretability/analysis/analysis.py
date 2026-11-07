@@ -120,24 +120,39 @@ def main() -> None:
             attractor_erased_incongruent_accuracy = np.nan
             random_accuracy = np.nan
         else:
-            subject_probe.fit(X, subject_y)
-            direction = subject_probe.coef_[0]
-            direction = direction / np.linalg.norm(direction)
-            attractor_probe.fit(X, attractor_y)
-            attractor_direction = attractor_probe.coef_[0]
-            attractor_direction = attractor_direction / np.linalg.norm(attractor_direction)
-            center = X.mean(axis=0)
-            direction_t = torch.tensor(direction, dtype=next(model.parameters()).dtype)
-            attractor_direction_t = torch.tensor(
-                attractor_direction, dtype=next(model.parameters()).dtype
-            )
-            center_t = torch.tensor(center, dtype=next(model.parameters()).dtype)
+            # Learn each item's intervention direction without its lexical group.
+            # This prevents the causal estimate from reusing the evaluation items.
+            subject_directions = np.empty_like(X)
+            attractor_directions = np.empty_like(X)
+            fold_centers = np.empty_like(X)
+            for train_idx, test_idx in cv.split(X, subject_y, groups):
+                subject_fold_probe = LogisticRegression(max_iter=3000, random_state=SEED)
+                attractor_fold_probe = LogisticRegression(max_iter=3000, random_state=SEED)
+                subject_fold_probe.fit(X[train_idx], subject_y[train_idx])
+                attractor_fold_probe.fit(X[train_idx], attractor_y[train_idx])
+
+                subject_direction = subject_fold_probe.coef_[0]
+                subject_direction /= np.linalg.norm(subject_direction)
+                attractor_direction = attractor_fold_probe.coef_[0]
+                attractor_direction /= np.linalg.norm(attractor_direction)
+
+                subject_directions[test_idx] = subject_direction
+                attractor_directions[test_idx] = attractor_direction
+                fold_centers[test_idx] = X[train_idx].mean(axis=0)
+
+            model_dtype = next(model.parameters()).dtype
+            subject_directions_t = torch.tensor(subject_directions, dtype=model_dtype)
+            attractor_directions_t = torch.tensor(attractor_directions, dtype=model_dtype)
+            fold_centers_t = torch.tensor(fold_centers, dtype=model_dtype)
 
             def erase_direction(_module, _inputs, output):
                 hs = output[0] if isinstance(output, tuple) else output
                 hs = hs.clone()
                 selected = hs[batch_index, final_pos]
-                projection = ((selected - center_t) @ direction_t).unsqueeze(1) * direction_t
+                projection = (
+                    ((selected - fold_centers_t) * subject_directions_t).sum(dim=1, keepdim=True)
+                    * subject_directions_t
+                )
                 hs[batch_index, final_pos] = selected - projection
                 return (hs,) + output[1:] if isinstance(output, tuple) else hs
 
@@ -160,8 +175,8 @@ def main() -> None:
                 hs = hs.clone()
                 selected = hs[batch_index, final_pos]
                 projection = (
-                    ((selected - center_t) @ attractor_direction_t).unsqueeze(1)
-                    * attractor_direction_t
+                    ((selected - fold_centers_t) * attractor_directions_t).sum(dim=1, keepdim=True)
+                    * attractor_directions_t
                 )
                 hs[batch_index, final_pos] = selected - projection
                 return (hs,) + output[1:] if isinstance(output, tuple) else hs
@@ -185,16 +200,24 @@ def main() -> None:
             random_drops = []
             random_accuracies = []
             for control_seed in range(10):
-                rng = np.random.default_rng(SEED + control_seed)
-                random_direction = rng.normal(size=direction.shape)
-                random_direction /= np.linalg.norm(random_direction)
-                random_t = torch.tensor(random_direction, dtype=direction_t.dtype)
+                random_directions = np.empty_like(X)
+                for fold_idx, (_train_idx, test_idx) in enumerate(
+                    cv.split(X, subject_y, groups)
+                ):
+                    rng = np.random.default_rng(SEED + 100 * control_seed + fold_idx)
+                    random_direction = rng.normal(size=X.shape[1])
+                    random_direction /= np.linalg.norm(random_direction)
+                    random_directions[test_idx] = random_direction
+                random_t = torch.tensor(random_directions, dtype=model_dtype)
 
-                def erase_random(_module, _inputs, output, vector=random_t):
+                def erase_random(_module, _inputs, output, vectors=random_t):
                     hs = output[0] if isinstance(output, tuple) else output
                     hs = hs.clone()
                     selected = hs[batch_index, final_pos]
-                    projection = ((selected - center_t) @ vector).unsqueeze(1) * vector
+                    projection = (
+                        ((selected - fold_centers_t) * vectors).sum(dim=1, keepdim=True)
+                        * vectors
+                    )
                     hs[batch_index, final_pos] = selected - projection
                     return (hs,) + output[1:] if isinstance(output, tuple) else hs
 
@@ -223,14 +246,27 @@ def main() -> None:
         })
 
     layers = pd.DataFrame(layer_rows)
-    final_difference = (
+    final_subject_effect = (
         items.correct_margin.to_numpy() - items.final_erased_correct_margin.to_numpy()
     )
+    final_subject_minus_attractor = (
+        items.final_attractor_erased_correct_margin.to_numpy()
+        - items.final_erased_correct_margin.to_numpy()
+    )
     bootstrap_rng = np.random.default_rng(SEED)
-    bootstrap_means = np.array([
-        bootstrap_rng.choice(final_difference, size=len(final_difference), replace=True).mean()
-        for _ in range(10_000)
-    ])
+    group_ids = np.sort(items.lexical_group.unique())
+    subject_bootstrap_means = []
+    contrast_bootstrap_means = []
+    for _ in range(10_000):
+        sampled_groups = bootstrap_rng.choice(group_ids, size=len(group_ids), replace=True)
+        sampled_rows = np.concatenate([
+            np.flatnonzero(items.lexical_group.to_numpy() == group_id)
+            for group_id in sampled_groups
+        ])
+        subject_bootstrap_means.append(final_subject_effect[sampled_rows].mean())
+        contrast_bootstrap_means.append(final_subject_minus_attractor[sampled_rows].mean())
+    subject_bootstrap_means = np.asarray(subject_bootstrap_means)
+    contrast_bootstrap_means = np.asarray(contrast_bootstrap_means)
 
     summary = {
         "model": MODEL_NAME,
@@ -264,8 +300,15 @@ def main() -> None:
             layers.loc[layers.state == 6, "random_direction_accuracy"].iloc[0]
         ),
         "final_margin_drop_bootstrap_ci95": [
-            float(np.quantile(bootstrap_means, 0.025)),
-            float(np.quantile(bootstrap_means, 0.975)),
+            float(np.quantile(subject_bootstrap_means, 0.025)),
+            float(np.quantile(subject_bootstrap_means, 0.975)),
+        ],
+        "final_subject_minus_attractor_margin_drop": float(
+            final_subject_minus_attractor.mean()
+        ),
+        "final_subject_minus_attractor_cluster_bootstrap_ci95": [
+            float(np.quantile(contrast_bootstrap_means, 0.025)),
+            float(np.quantile(contrast_bootstrap_means, 0.975)),
         ],
     }
 

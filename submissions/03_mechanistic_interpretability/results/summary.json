@@ -10,15 +10,20 @@
   "best_subject_probe_accuracy": 0.9375,
   "best_attractor_probe_accuracy": 1.0,
   "largest_causal_drop_state": 6,
-  "largest_causal_margin_drop": 1.738875675201416,
-  "accuracy_after_final_subject_erasure": 0.7625,
-  "incongruent_accuracy_after_final_subject_erasure": 0.625,
-  "final_attractor_direction_margin_drop": 0.004815673828125,
+  "largest_causal_margin_drop": 1.5781657695770264,
+  "accuracy_after_final_subject_erasure": 0.6625,
+  "incongruent_accuracy_after_final_subject_erasure": 0.55,
+  "final_attractor_direction_margin_drop": 0.0004547119140625,
   "accuracy_after_final_attractor_erasure": 0.925,
   "incongruent_accuracy_after_final_attractor_erasure": 0.875,
   "mean_random_direction_accuracy_at_final": 0.9250000000000002,
   "final_margin_drop_bootstrap_ci95": [
-    1.4535830986499787,
-    2.016509302854538
+    1.4608640587329864,
+    1.6883004009723663
+  ],
+  "final_subject_minus_attractor_margin_drop": 1.5777110576629638,
+  "final_subject_minus_attractor_cluster_bootstrap_ci95": [
+    1.4602724969387053,
+    1.6855426824092865
   ]
 }
